@@ -1,0 +1,362 @@
+1
+00:00:06,620 --> 00:00:08,040
+Hello.
+My name is Antoine Miné.
+
+2
+00:00:08,040 --> 00:00:12,180
+I will present you one application of the
+OCaml programming language:
+
+3
+00:00:12,200 --> 00:00:14,160
+the Astrée static analyzer.
+
+4
+00:00:14,160 --> 00:00:17,540
+Astrée is a research project 
+that started in 2001
+
+5
+00:00:17,540 --> 00:00:19,580
+by a team at École normale supérieure
+
+6
+00:00:19,580 --> 00:00:21,849
+under the supervision of Patrick Cousot.
+
+7
+00:00:21,859 --> 00:00:26,340
+It lead to the design of a software 
+that is used in several industries
+
+8
+00:00:26,340 --> 00:00:28,860
+such as avionics and automotive industries.
+
+9
+00:00:28,860 --> 00:00:30,680
+It is available commercially.
+
+10
+00:00:30,680 --> 00:00:36,200
+It is also an example of a large program made in OCaml
+
+11
+00:00:37,660 --> 00:00:40,469
+Astrée is a static analyzer for C.
+
+12
+00:00:40,469 --> 00:00:42,809
+It checks for the absence of run-time errors
+
+13
+00:00:42,809 --> 00:00:45,610
+such as array overflows or memory errors
+
+14
+00:00:45,610 --> 00:00:50,469
+The check is static, at compile time 
+as opposed to testing.
+
+15
+00:00:50,469 --> 00:00:53,510
+It focuses on embedded critical C
+
+16
+00:00:53,510 --> 00:00:58,530
+a field where it is important to ensure 
+the absence of error
+
+17
+00:00:58,530 --> 00:01:01,399
+before the program is ever run
+
+18
+00:01:01,399 --> 00:01:04,420
+Astrée works directly on the original source code
+
+19
+00:01:04,420 --> 00:01:08,830
+without any help or annotation from the user.
+
+20
+00:01:08,830 --> 00:01:14,300
+To scale up to million-line size programs
+Astrée must do approximations.
+
+21
+00:01:14,300 --> 00:01:19,420
+For instance, the values of a variable may
+be modelled as an interval
+
+22
+00:01:19,420 --> 00:01:22,780
+which is an over-approximation
+ easily representable in memory
+
+23
+00:01:22,780 --> 00:01:24,680
+as a pair of bounds.
+
+24
+00:01:24,690 --> 00:01:26,740
+These approximations are always sound.
+
+25
+00:01:26,750 --> 00:01:31,030
+They would result in over-approximating 
+the set of behaviors of the program.
+
+26
+00:01:31,030 --> 00:01:35,030
+So that, if Astrée does not find any error
+
+27
+00:01:35,030 --> 00:01:38,640
+then there is actually no error
+in the original source code.
+
+28
+00:01:38,640 --> 00:01:41,950
+Astrée is based on
+ the Abstract Interpretation framework
+
+29
+00:01:41,950 --> 00:01:46,210
+which helps in defining approximations
+in such a sound way.
+
+30
+00:01:46,210 --> 00:01:51,220
+Due to over-approximation 
+the analysis may report false alarms.
+
+31
+00:01:51,220 --> 00:01:55,020
+Actually, Astrée employs dozens 
+of  such abstract domains
+
+32
+00:01:55,030 --> 00:01:56,850
+in addition to intervals
+
+33
+00:01:56,850 --> 00:01:58,950
+in order to be sufficiently precise.
+
+34
+00:01:58,950 --> 00:02:02,409
+Before its industrialization, 
+Astrée was used in academia
+
+35
+00:02:02,409 --> 00:02:05,770
+in order to check avionics code 
+from Airbus planes.
+
+36
+00:02:05,770 --> 00:02:09,220
+On this code, Astrée achieved 
+an unprecedented result
+
+37
+00:02:09,220 --> 00:02:14,900
+the proof of absence of run-time error, 
+that is, zero false alarm.
+
+38
+00:02:14,900 --> 00:02:21,260
+Now, Astrée is industrialized and  
+available commercially from the AbsInt company.
+
+39
+00:02:23,940 --> 00:02:29,700
+Now, why is OCaml such a great tool
+ to design a static analyzer?
+
+40
+00:02:29,709 --> 00:02:33,920
+There are two language features 
+that are used pervasively in Astrée.
+
+41
+00:02:33,920 --> 00:02:37,080
+The first one is Abstract data-types.
+
+42
+00:02:37,080 --> 00:02:43,760
+The union type in OCaml is a perfect tool
+to manipulate abstract syntax trees.
+
+43
+00:02:43,769 --> 00:02:47,440
+Astrée manipulates a lot of abstract syntax trees
+
+44
+00:02:47,440 --> 00:02:50,530
+that represent parts of the program to analyze.
+
+45
+00:02:50,530 --> 00:02:56,890
+For instance, Astrée may need to evaluate
+a C expression in the world of intervals.
+
+46
+00:02:56,890 --> 00:03:00,880
+Astrée will use pervasively pattern-matching
+
+47
+00:03:00,890 --> 00:03:04,659
+in order to iterate over the syntax tree.
+
+48
+00:03:04,660 --> 00:03:07,581
+and recognize special instructions to handle.
+
+49
+00:03:08,240 --> 00:03:12,200
+The second one is modules and functors.
+
+50
+00:03:12,209 --> 00:03:16,959
+Astrée is a very modular tool
+that contains dozens of abstractions
+
+51
+00:03:16,959 --> 00:03:19,120
+that can be plugged in and out.
+
+52
+00:03:19,120 --> 00:03:21,290
+Each abstract domain is a module
+
+53
+00:03:21,290 --> 00:03:25,799
+with a type that represents 
+abstract sets of values
+
+54
+00:03:25,799 --> 00:03:31,010
+as well as operators to model in the abstract world
+the effect of every instruction.
+
+55
+00:03:31,010 --> 00:03:36,370
+The Abstract Interpretation theory also features
+a lot of higher order constructs
+
+56
+00:03:36,370 --> 00:03:42,620
+that allow designing new abstract domains
+by combining and lifting existing ones.
+
+57
+00:03:42,620 --> 00:03:46,580
+These are naturally mapped to OCaml functors.
+
+58
+00:03:46,580 --> 00:03:49,220
+Astrée employes many such functors
+
+59
+00:03:49,230 --> 00:03:53,830
+in order to develop each language feature
+and each abstraction
+
+60
+00:03:53,830 --> 00:03:57,010
+as independently as possible from the other ones.
+
+61
+00:03:57,010 --> 00:04:01,950
+We have functors to add disjunctions,
+to add pointers, to add control structures,
+
+62
+00:04:01,950 --> 00:04:04,299
+and so on so forth.
+
+63
+00:04:04,299 --> 00:04:10,379
+This design has also allowed Astrée to evolve
+quite significantly since 2001
+
+64
+00:04:10,379 --> 00:04:15,480
+while still reusing the abstractions
+that were designed early on.
+
+65
+00:04:15,480 --> 00:04:19,140
+I should add that the static type checking
+and type inference of OCaml
+
+66
+00:04:19,140 --> 00:04:25,700
+has helped us tremendously in designing Astrée
+quickly and robustly.
+
+67
+00:04:25,700 --> 00:04:32,020
+Finally, Ocaml's native code compiler 
+has brought us all the efficiency we need
+
+68
+00:04:32,040 --> 00:04:36,160
+for a tool that can be used in industry.
+
+69
+00:04:38,860 --> 00:04:47,360
+To go further, you can check Astrée's webpage
+at www.astree.ens.fr,
+
+70
+00:04:47,360 --> 00:04:49,820
+and check the publications.
+
+71
+00:04:49,820 --> 00:04:53,139
+There are also a couple of related projects.
+
+72
+00:04:53,139 --> 00:04:57,620
+This first one is the open-source Frama-C
+verification platform
+
+73
+00:04:57,620 --> 00:05:02,030
+which includes a static analyzer, 
+also programmed in OCaml.
+
+74
+00:05:02,030 --> 00:05:05,060
+The other one is the Verasco project,
+
+75
+00:05:05,060 --> 00:05:09,420
+It aims at creating a static analyzer certified in Coq
+
+76
+00:05:09,430 --> 00:05:12,250
+following the success of the Compcert compiler.
+
+77
+00:05:12,860 --> 00:05:16,500
+As you see, the OCaml programming language
+has been used
+
+78
+00:05:16,509 --> 00:05:21,069
+to design applications that are successful
+in the real world.
+
+79
+00:05:21,069 --> 00:05:23,440
+I hope that you enjoyed this MOOC
+
+80
+00:05:23,440 --> 00:05:26,539
+and that you will build your own 
+successful OCaml application.
+

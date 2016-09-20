@@ -1,0 +1,463 @@
+1
+00:00:00,140 --> 00:00:06,850
+Dans cette séquence, nous allons voir comment il est possible 
+d'entrer ou sortir des informations vers ou depuis des programmes OCaml.
+
+2
+00:00:06,850 --> 00:00:09,740
+Permettez moi d'abord de rappeler certaines choses.
+
+3
+00:00:09,740 --> 00:00:17,390
+Jusqu'à maintenant, nous avons beaucoup utilisé le toplevel
+OCaml, qui est très pratique.
+
+4
+00:00:17,390 --> 00:00:20,410
+Il lit nos programmes de manière incrémentale,
+phrase par phrase,
+
+5
+00:00:20,410 --> 00:00:23,859
+et affiche le résultat de l'exécution de
+nos programmes.
+
+6
+00:00:23,859 --> 00:00:26,070
+Ce qui est fantastique, parce que jusqu'ici
+
+7
+00:00:26,070 --> 00:00:32,489
+nous avons pu faire tout le travail sans découvrir
+la moindre opération d'entrée/sortie :
+
+8
+00:00:32,489 --> 00:00:35,390
+tout cela est fait pour nous par le toplevel.
+
+9
+00:00:35,390 --> 00:00:41,030
+Mais dans de vrais programmes, bien sûr, vous
+avez besoin de pouvoir lire ou écrire dans un fichier,
+
+10
+00:00:41,030 --> 00:00:44,469
+depuis l'entrée standard, ou vers la sortie standard.
+
+11
+00:00:44,469 --> 00:00:49,590
+OCaml offre un ensemble riche de primitives d'entrées/sorties.
+Nous allons voir certaines d'entre elles maintenant,
+
+12
+00:00:49,590 --> 00:00:55,079
+mais tout d'abord, nous avons besoin de recontrer
+un type étrange, appelé le type <u>unit</u>,
+
+13
+00:00:55,079 --> 00:00:59,980
+qui est très pratique lorsque nous commençons à
+faire des opérations qui ont des effets de bord, comme
+
+14
+00:00:59,980 --> 00:01:01,210
+les opérations d'entrées/sorties.
+
+15
+00:01:01,210 --> 00:01:03,289
+Faisons donc la connaissance de ce type <u>unit</u>.
+
+16
+00:01:03,289 --> 00:01:09,060
+Regardez cette expression étrange, paranthèse ouvante
+et parenthèse fermante, sans rien d'autre.
+
+17
+00:01:09,060 --> 00:01:18,800
+Si nous pressons 'Entrée', le système nous répond que
+nous avons défini une valeur qui est
+
+18
+00:01:18,800 --> 00:01:24,400
+<u>()</u>, d'un type que nous ne connaissons pas encore,
+qui s'appelle le type <u>unit</u>.
+
+19
+00:01:24,549 --> 00:01:33,430
+Le type <u>unit</u> est un typique comme entrée
+ou comme résultat de fonctions
+
+20
+00:01:33,430 --> 00:01:34,369
+à effets de bord.
+
+21
+00:01:34,369 --> 00:01:44,000
+Il ne comporte qu'une valeur, qui est appelé
+également "unit", et qui s'écrit simplement <u>()</u>.
+
+22
+00:01:44,000 --> 00:01:49,719
+C'est une syntaxe spéciale pour la seule valeur
+du type <u>unit</u>.
+
+23
+00:01:49,719 --> 00:01:58,149
+Ce choix de syntaxe peut paraître étrange,
+mais il existe des raisons
+
+24
+00:01:58,149 --> 00:01:59,719
+précises que cela soit comme ça,
+
+25
+00:01:59,719 --> 00:02:03,079
+cela deviendra clair dans quelques transparents.
+
+26
+00:02:03,079 --> 00:02:10,390
+Maintenant que nous avons recontré ce type <u>unit</u>,
+ce <u>()</u>, et qu'il ne nous choque plus trop,
+
+27
+00:02:10,390 --> 00:02:13,620
+regardons ces fonctions pour les entrées
+et les sorties.
+
+28
+00:02:13,620 --> 00:02:19,400
+La première que nous pouvons utiliser pour effectuer
+de simples sorties est pour afficher un entier.
+
+29
+00:02:19,400 --> 00:02:23,709
+Il y a une fonction prédéfinie pour vous pour cela,
+qui s'appelle <u>print_int</u>,
+
+30
+00:02:23,709 --> 00:02:28,190
+son type est <u>int -> unit</u>, donc
+que fait-elle ?
+
+31
+00:02:28,190 --> 00:02:32,819
+Elle prend un entier en entrée, et affiche
+cet entier sur la sortie standard
+
+32
+00:02:32,819 --> 00:02:37,730
+puis retourne la valeur <u>()</u> de type
+<u>unit</u>.
+
+33
+00:02:37,730 --> 00:02:43,900
+Affichons par exemple l'entier 12345.
+
+34
+00:02:43,900 --> 00:02:49,069
+On presse 'Entrée', et voilà le résultat.
+
+35
+00:02:49,069 --> 00:02:52,470
+Pour bien comprendre ce qu'il se passe dans ce cas
+pour la sortie standard,
+
+36
+00:02:52,470 --> 00:02:56,629
+il est important de comprendre que la première chose
+qui s'est passé
+
+37
+00:02:56,629 --> 00:02:59,989
+est que la fonction d'affichage a effectivement bien
+affiché sur la sortie standard
+
+38
+00:02:59,989 --> 00:03:05,879
+le nombre 12345, puis s'est arrêté là.
+
+39
+00:03:05,879 --> 00:03:11,519
+Juste après, le toplevel imprime son
+propre message,
+
+40
+00:03:11,519 --> 00:03:17,599
+qui dit que l'évaluation a retourné la valeur
+<u>()</u> de type <u>unit</u>,
+
+41
+00:03:17,599 --> 00:03:21,440
+et qu'il n'y a pas d'identifiant liée à cette valuer,
+ce qui est notée par '- :'.
+
+42
+00:03:21,440 --> 00:03:26,209
+On peut aussi effectuer de simple opérations d'entrées,
+
+43
+00:03:26,209 --> 00:03:29,780
+il y a une fonction prédéfinie qui s'appelle
+<u>read_line</u> pour vous.
+
+44
+00:03:29,780 --> 00:03:37,019
+C'est un type qui dit : je prend un <u>unit</u>
+et je retourne une chaîne de caractères.
+
+45
+00:03:37,019 --> 00:03:41,310
+Ce qu'il se passe réellement est que cette
+fonction attend une valeur en entrée de type <u>unit</u>,
+
+46
+00:03:41,310 --> 00:03:45,430
+il y en a juste une, et elle est <u>()</u>,
+
+47
+00:03:45,430 --> 00:03:51,129
+and aussitît qu'une ligne de caractères est
+lue sur l'entrée standard, elle est retournée
+
+48
+00:03:51,129 --> 00:03:51,830
+elle est retournée,
+
+49
+00:03:51,830 --> 00:03:54,790
+sous forme d'une chaîne de caractères.
+
+50
+00:03:54,790 --> 00:03:57,879
+Essayons par exemple de lire une ligne, donc
+maintenant vous devez écrire <u>read_line</u>,
+
+51
+00:03:57,879 --> 00:04:05,250
+et devez donner le paramètre de type <u>unit</u>,
+il n'en exite qu'un qui est <u>()</u>.
+
+52
+00:04:05,250 --> 00:04:11,140
+Lorsque l'on presse 'Entrée', le système attend
+notre entrée, j'écris ici "some text",
+
+53
+00:04:11,140 --> 00:04:17,540
+et dès que je presse 'Entrée', le résultat
+que j'obtiens du système
+
+54
+00:04:17,540 --> 00:04:22,810
+est la chaîne de caractères contenant "some text",
+de type <u>string</u>.
+
+55
+00:04:22,810 --> 00:04:24,840
+Voià ce qu'il se passe réellement :
+
+56
+00:04:24,840 --> 00:04:28,440
+<u>read_line</u> reçois l'argument <u>()</u>,
+
+57
+00:04:28,440 --> 00:04:30,410
+commence à lire sur l'entrée standard,
+
+58
+00:04:30,410 --> 00:04:34,130
+et après que nous ayons entré "some text" et pressé 'Entrée',
+
+59
+00:04:34,130 --> 00:04:38,440
+le toplevel affiche son message qui dit :
+l'évaluation retourne une valeur, une chaîne de caractères,
+
+60
+00:04:38,440 --> 00:04:41,940
+de type <u>string</u>,
+
+61
+00:04:41,940 --> 00:04:44,850
+et il n'y a aucun identifiant liée à cette chaîne.
+
+62
+00:04:44,850 --> 00:04:50,570
+Deux cas très simples donc : afficher un entier
+et lire une ligne.
+
+63
+00:04:50,570 --> 00:04:54,850
+Maintenant je pense que nous sommes prêt à
+aborder le choix particulier de syntaxe fait ici,
+
+64
+00:04:54,850 --> 00:04:59,510
+il devrait être facile de voir pourquoi
+pour l'unique valeur de type <u>unit</u>,
+
+65
+00:04:59,510 --> 00:05:03,560
+il a été choisi d'utiliser <u>()</u>.
+
+66
+00:05:03,560 --> 00:05:08,350
+Parce que <u>read_line</u> par exemple, dans
+l'exemple que nous venons de voir,
+
+67
+00:05:08,350 --> 00:05:14,910
+est écrit de manière à ce qu'il ressemble à une
+fonction sans argument comme dans d'autres langages
+
+68
+00:05:14,910 --> 00:05:19,110
+lorsque vous les utilisez par exemple, pour
+effectuer des effets de bord.
+
+69
+00:05:19,110 --> 00:05:21,800
+C'est très familier pour les personnes
+venant d'autres langages,
+
+70
+00:05:21,800 --> 00:05:25,480
+mais pour nous, maintenant que nous apprenons le
+langage OCaml,
+
+71
+00:05:25,480 --> 00:05:31,850
+vous devez vous souvenir que ce que ça signifie réellement
+est que <u>read_line</u> est appliquée à une argument,
+
+72
+00:05:31,850 --> 00:05:37,450
+qui s'avère être de type <u>unit</u>, et qui
+s'écrit donc <u>()</u>.
+
+73
+00:05:37,450 --> 00:05:42,520
+Évidemment lorsque nous commençons à
+faire des entrées et des sorties,
+
+74
+00:05:42,520 --> 00:05:45,240
+il y a de nombreux autres types de base qui
+peuvent être affichés,
+
+75
+00:05:45,240 --> 00:05:49,710
+nous disposons de fonctions pour affichier des
+caractères, des chaînes de caractères, des nombres flottants.
+
+76
+00:05:49,710 --> 00:05:54,560
+Vous avez des fonctions pour afficher une nouvelle ligne,
+pour flusher la sortie standard,
+
+77
+00:05:54,560 --> 00:05:56,780
+et bien d'autres fonctions encore
+
+78
+00:05:56,780 --> 00:06:00,050
+pour manipuler l'entrée standard, la sortie standard, ainsi
+que la sortie d'erreur,
+
+79
+00:06:00,050 --> 00:06:01,810
+créer, ouvrir et fermer des fichiers,
+
+80
+00:06:01,810 --> 00:06:03,450
+lire et écrire sur des canaux,
+
+81
+00:06:03,450 --> 00:06:06,820
+effectuer des opérations sophistiquées comme <u>scanf</u>...
+
+82
+00:06:06,820 --> 00:06:11,970
+Ce qui est magnifique dans ce langage est que <u>scanf</u>,
+contrairement à ce qu'il se passe en C, est réellement bien typé.
+
+83
+00:06:11,970 --> 00:06:15,630
+Je vous recommande de vous référer au manuel dans
+la section Pervasives
+
+84
+00:06:15,630 --> 00:06:17,890
+pour avoir une idée de ce genre de fonctions.
+
+85
+00:06:17,890 --> 00:06:19,970
+Un avertissement tout de même,
+
+86
+00:06:19,970 --> 00:06:24,720
+plusieurs de ces fonctions n'ont pas de sens
+lorsqu'elle sont appelées depuis un navigateur,
+
+87
+00:06:24,720 --> 00:06:26,990
+comme dans les exercices et l'environnement que
+nous vous proposons ici,
+
+88
+00:06:26,990 --> 00:06:30,530
+et elles ne sont alors pas implémentées dans le
+toplevel de votre navigateur.
+
+89
+00:06:30,530 --> 00:06:36,190
+Vous devriez vous en tenir à simplement afficher
+et lire des lignes.
+
+90
+00:06:36,190 --> 00:06:40,500
+Pour résumer, nous avons dévouvert le type <u>unit</u>,
+et les fonctions d'entrées/sorties.
+
+91
+00:06:40,500 --> 00:06:45,590
+Le type <u>unit</u>, dès que vous le voyez,
+signifie en général qu'il y a des effets de bord
+
+92
+00:06:45,590 --> 00:06:46,210
+à prévoir,
+
+93
+00:06:46,210 --> 00:06:49,710
+il est utilisé très fréquemment pour les fonctions à effets de bord.
+
+94
+00:06:49,710 --> 00:06:54,930
+Lorsque vous voyez quelque chose comme <u>read_line ()</u>,
+en venant d'un autre langage,
+
+95
+00:06:54,930 --> 00:06:57,700
+vous pourriez penser qu'il s'agit d'une fonction à
+0 paramètre.
+
+96
+00:06:57,700 --> 00:07:02,150
+C'est vraiment une fonction avec un paramètre qui
+s'avère être de type <u>unit</u>.
+
+97
+00:07:02,150 --> 00:07:07,410
+Et maintenant, nous savons comment effectuer des
+opérations simples d'entrées/sorties,
+
+98
+00:07:07,410 --> 00:07:13,830
+mais si pour en savoir plus, n'hésitez pas
+à consulter le manuel de référence pour
+
+99
+00:07:13,830 --> 00:07:17,710
+plus d'informations.
+
